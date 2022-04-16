@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.core.utils.Constant;
+import com.core.utils.bean.Constant;
 import com.core.utils.bean.Patient;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -78,16 +78,16 @@ public class PatientControllerServlet extends HttpServlet {
 
 		try {
 
-			URL url = new URL("http://localhost:8080/hospitalServices/patients");
+			URL url = new URL(Constant.REST_URL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod(Constant.PUT);
 			conn.setRequestProperty(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON);
 
 			Patient patient = new Patient();
-			patient.setName(request.getParameter("name"));
-			patient.setId(Long.valueOf(request.getParameter("patientId")));
-			patient.setEmail(request.getParameter("email"));
+			patient.setName(request.getParameter(Constant.NAME));
+			patient.setId(Long.valueOf(request.getParameter(Constant.PATIENT_ID)));
+			patient.setEmail(request.getParameter(Constant.EMAIL));
 
 			OutputStream os = conn.getOutputStream();
 			os.write(new Gson().toJson(patient).toString().getBytes());
@@ -120,7 +120,7 @@ public class PatientControllerServlet extends HttpServlet {
 
 		try {
 
-			URL url = new URL("http://localhost:8080/hospitalServices/patients/" + request.getParameter("patientId"));
+			URL url = new URL(Constant.REST_URL + "/" + request.getParameter(Constant.PATIENT_ID));
 
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(Constant.DELETE);
@@ -149,13 +149,13 @@ public class PatientControllerServlet extends HttpServlet {
 	private void loadPatient(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// read student id from form data
-		String thePatientId = request.getParameter("patientId");
+		String thePatientId = request.getParameter(Constant.PATIENT_ID);
 
 		// get student from database (db util)
 
 		try {
 
-			URL url = new URL(Constant.GET_ALL_URL + "/" + thePatientId);
+			URL url = new URL(Constant.REST_URL + "/" + thePatientId);
 
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(Constant.GET);
@@ -199,15 +199,15 @@ public class PatientControllerServlet extends HttpServlet {
 
 		try {
 
-			URL url = new URL("http://localhost:8080/hospitalServices/patients");
+			URL url = new URL(Constant.REST_URL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod(Constant.POST);
 			conn.setRequestProperty(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON);
 
 			// read patient info from form data
-			String name = request.getParameter("name");
-			String email = request.getParameter("email");
+			String name = request.getParameter(Constant.NAME);
+			String email = request.getParameter(Constant.EMAIL);
 
 			Patient patient = new Patient();
 			patient.setName(name);
@@ -240,7 +240,7 @@ public class PatientControllerServlet extends HttpServlet {
 
 	private void listPatients(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		URL url = new URL("http://localhost:8080/hospitalServices/patients");
+		URL url = new URL(Constant.REST_URL);
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(Constant.GET);
